@@ -7,12 +7,12 @@ var (
 
 // Register lets caller register a GUID with a name, and checks if any duplicates
 // appear.
-func Register(name string,g GUID) error {
-	if v:=GUIDMap[name]; v!=g  {
-		return MultipleGUIDError{name,g,v}
+func Register(name string, g GUID) error {
+	if v, ok := GUIDMap[name]; ok && v != g {
+		return MultipleGUIDError{name, g, v}
 	}
-	if v:=NameMap[g]; v != name {
-		return DuplicateGUIDError{g,name,v}
+	if v, ok := NameMap[g]; ok && v != name {
+		return DuplicateGUIDError{g, name, v}
 	}
 
 	GUIDMap[name] = g
@@ -22,13 +22,13 @@ func Register(name string,g GUID) error {
 }
 
 type MultipleGUIDError struct {
-	Name string
-	New,Orig GUID
+	Name      string
+	New, Orig GUID
 }
 
 type DuplicateGUIDError struct {
-	GUID GUID
-	New,Orig string
+	GUID      GUID
+	New, Orig string
 }
 
 func (m MultipleGUIDError) Error() string {
@@ -40,13 +40,13 @@ func (d DuplicateGUIDError) Error() string {
 }
 
 //GUIDOf returns the registered GUID of given name. If there is no name registered, the bool is set to be false
-func GUIDOf(name string) (GUID,bool) {
-	g,ok := GUIDMap[name]
-	return g,ok
+func GUIDOf(name string) (GUID, bool) {
+	g, ok := GUIDMap[name]
+	return g, ok
 }
 
 //NameOf returns the registered name of given GUID. If there is no GUID registered, the bool is set to be false
-func NameOf(g GUID) (string,bool) {
-	name,ok := NameMap[g]
-	return name,ok
+func NameOf(g GUID) (string, bool) {
+	name, ok := NameMap[g]
+	return name, ok
 }
